@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">TodoApp</string>
+    <string name="create_new_task">Add New</string>
+    <string name="home">Home</string>
+    <string name="icn_user_detail_app_bar_back_button">Navigate back</string>
+    <string name="icon_error_info_text">Error Info</string>
+    <string name="no_matched_repo_found">Todo list is empty and create.</string>
+    <string name="network_connection_status">Connection Status: </string>
+    <string name="connected">Connected </string>
+    <string name="not_connected">Not Connected </string>
+    <string name="need_connection">Please open connection first time and touch refresh.</string>
+    <string name="add">Add</string>
+    <string name="need_connection_message">Need connection</string>
+
+</resources>
