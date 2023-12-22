@@ -5,10 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class GetTodoListResp (
 
-    @SerializedName("code")
-    var code : Int? = null,
-
-    @SerializedName("data")
+    @SerializedName("todos")
     var data : ArrayList<Data> = arrayListOf()
 
 )
