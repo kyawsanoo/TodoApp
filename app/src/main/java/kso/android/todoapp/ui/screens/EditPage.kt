@@ -49,6 +49,7 @@ fun EditPage(
     navHostController: NavHostController,
     editPageViewModel: EditPageViewModel
 ) {
+    val context = LocalContext.current.applicationContext
 
     val isSuccess by editPageViewModel.isSuccess.observeAsState(false)
     val isLoading by editPageViewModel.isLoading.observeAsState(false)
@@ -88,8 +89,11 @@ fun EditPage(
                 Spacer(modifier = Modifier.padding(vertical = 20.dp))
                 UpdateButton(onClick = {
                     showMessage(msg= "update button clicked")
-                    editPageViewModel.updateButtonClicked()
-
+                    if(editPageViewModel.isValidated()) {
+                        editPageViewModel.updateButtonClicked()
+                    }else{
+                        Toast.makeText(context, "Select completed true or false.", Toast.LENGTH_LONG).show()
+                    }
 
                 }, editPageViewModel, isLoading, errorMessage, isSuccess, onBackClick = {
                     navHostController.popBackStack()
@@ -127,9 +131,6 @@ fun EditPageTopAppBar(title: String, onBackClick: () -> Unit) {
 @Composable
 fun MyUI(editPageViewModel: EditPageViewModel) {
     val listItems = arrayOf("True", "False")
-    val contextForToast = LocalContext.current.applicationContext
-
-    // state of the menu
     var expanded by remember {
         mutableStateOf(false)
     }

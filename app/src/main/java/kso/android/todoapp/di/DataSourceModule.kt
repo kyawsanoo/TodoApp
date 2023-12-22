@@ -23,7 +23,7 @@ class DataSourceModule {
     @Singleton
     @Provides
     @Named("baseUrl")
-    fun baseUrl() = "https://calm-plum-jaguar-tutu.cyclic.app" //api : https://calm-plum-jaguar-tutu.cyclic.app/todos
+    fun baseUrl() = "https://dummyjson.com"
 
     @Singleton
     @Provides

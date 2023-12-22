@@ -1,10 +1,7 @@
 package kso.android.todoapp.api
 
-import kso.android.todoapp.models.CreateTodoResp
-import kso.android.todoapp.models.DeleteTodoResp
+import kso.android.todoapp.models.Data
 import kso.android.todoapp.models.GetTodoListResp
-import kso.android.todoapp.models.GetTodoResp
-import kso.android.todoapp.models.UpdateTodoResp
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -21,17 +18,17 @@ interface RestDataSource {
     @GET("/todos")
     suspend fun getTodoList(): Response<GetTodoListResp>
 
-    @POST("/todos")
-    suspend fun createNewTask(@Body requestBody: RequestBody): Response<CreateTodoResp>
+    @POST("/todos/add")
+    suspend fun createNewTask(@Body requestBody: RequestBody): Response<Data>
 
     // Request using
     @GET("/todos/{id}")
-    suspend fun getTodo(@Path("id") todoId: String): Response<GetTodoResp>
+    suspend fun getTodo(@Path("id") todoId: Int): Response<Data>
 
     @PUT("/todos/{id}") //update
-    suspend fun updateTodo(@Path("id") todoId: String, @Body requestBody: RequestBody): Response<UpdateTodoResp>
+    suspend fun updateTodo(@Path("id") todoId: Int, @Body requestBody: RequestBody): Response<Data>
 
     @DELETE("/todos/{id}")//delete
-    suspend fun deleteTodo(@Path("id") todoId: String): Response<DeleteTodoResp>
+    suspend fun deleteTodo(@Path("id") todoId: Int): Response<Data>
 
 }

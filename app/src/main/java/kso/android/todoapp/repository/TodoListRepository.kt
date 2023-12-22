@@ -11,7 +11,6 @@ import kso.android.todoapp.BuildConfig
 import kso.android.todoapp.api.RestDataSource
 import kso.android.todoapp.db.TodoListDatabase
 import kso.android.todoapp.models.Data
-import kso.android.todoapp.models.DeleteTodoResp
 import kso.android.todoapp.models.GetTodoListResp
 import kso.android.todoapp.models.Resource
 import kso.android.todoapp.networkboundresource.todoListNetworkBoundResource
@@ -24,7 +23,7 @@ interface TodoListBaseRepository{
     fun getTodoListNetworkBoundResource(): Flow<Resource<List<Data>>>// for offline cache in to show to do list
 
     fun getTodoListResource(): Flow<Resource<List<Data>>>
-    fun deleteTodoResource(todoId: String): Flow<Resource<Data>>
+    fun deleteTodoResource(todoId: Int): Flow<Resource<Data>>
 
 }
 
@@ -70,40 +69,41 @@ class TodoListRepository @Inject constructor(private val apiDataSource: RestData
             showMessage(msg=  "start calling todo list api ")
             emit(Resource.Loading)
             val response: Response<GetTodoListResp> = apiDataSource.getTodoList();
-            if(response.isSuccessful){
-                if (response.isSuccessful) {
-                    val todoListRespJson = Gson().toJson(
-                        response.body()!!
-
-                    )
-                    showMessage(msg= "delete todo api Response JSON : $todoListRespJson" )
-                    emit(Resource.Success(response.body()!!.data))
-
-                } else {
-                    showMessage(msg= "RETROFIT_ERROR ${ response.code().toString()}")
-                    emit(Resource.Fail(error = response.message()))
+            if (response.isSuccessful) {
+                if(response.body()!=null) {
+                    val todoListResp: GetTodoListResp = response.body()!!
+                    val todoListRespJson = Gson().toJson(todoListResp)
+                    showMessage(msg = "todo list api Response JSON : $todoListRespJson")
+                    emit(Resource.Success(todoListResp.data))
+                }else{
+                    showMessage(msg = "todo list api Response body: Null")
+                    emit(Resource.Fail(error = "todo list api Response body: Null"))
                 }
+            } else {
+                showMessage(msg= "RETROFIT_ERROR ${ response.code().toString()}")
+                emit(Resource.Fail(error = response.message()))
             }
+
         }
     }
-    override fun deleteTodoResource(todoId: String): Flow<Resource<Data>> {
+    override fun deleteTodoResource(todoId: Int): Flow<Resource<Data>> {
         return flow {
             showMessage(msg= "start calling delete todo api id: $todoId")
             emit(Resource.Loading)
-            val response: Response<DeleteTodoResp> = apiDataSource.deleteTodo(todoId);
-            if(response.isSuccessful){
-                if (response.isSuccessful) {
-                    val deleteResponseJson = Gson().toJson(
-                        response.body()!!
-
-                    )
-                    showMessage(msg= "delete todo api Response JSON : $deleteResponseJson")
-                    emit(Resource.Success(Data(id = "")))
-
-                } else {
-                    showMessage(msg= "RETROFIT_ERROR ${response.code().toString()}" )
-                    emit(Resource.Fail(error = response.message()))
+            val response: Response<Data> = apiDataSource.deleteTodo(todoId);
+            if (response.isSuccessful) {
+                if(response.body()!=null) {
+                    val todo: Data = response.body()!!
+                    val deleteResponseJson = Gson().toJson(todo)
+                    showMessage(msg = "delete todo api Response JSON : $deleteResponseJson")
+                    emit(Resource.Success(todo))
+                }else{
+                    showMessage(msg= "delete todo api Response body: Null" )
+                    emit(Resource.Fail(error = "delete todo api Response body: Null"))
                 }
+            } else {
+                showMessage(msg= "RETROFIT_ERROR ${response.code().toString()}" )
+                emit(Resource.Fail(error = response.message()))
             }
         }
     }

@@ -2,6 +2,7 @@ package kso.android.todoapp.viewmodels
 
 import android.app.Application
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -41,39 +42,37 @@ class CreatePageViewModel @Inject constructor(
         showMessage(msg= "TodoName: $todoName");
     }
 
+    fun isValided(): Boolean{
+        return todoName.isNotEmpty()
+    }
     fun createButtonClicked(){
         showMessage(msg= "create new task button clicked")
         viewModelScope.launch {
-            repository.createNewTaskResource(todoName).collect{
+            repository.createNewTaskResource(todoName).collect {
                 when (it) {
                     Resource.Loading -> {
-                        showMessage(msg= "Create New Task Fetch Loading")
+                        showMessage(msg = "Create New Task Fetch Loading")
                         isLoading.value = it.isLoading
                     }
 
                     Resource.Fail("") -> {
-                        showMessage(msg= "Create New Task Fail")
+                        showMessage(msg = "Create New Task Fail")
                         isLoading.value = false
                         errorMessage.value = it.errorMessage.orEmpty()
                     }
 
                     else -> {
-                        showMessage(msg="Create New Task Success")
+                        showMessage(msg = "Create New Task Success")
                         val todo: Data = it.data!!
-                        showMessage(msg= Gson().toJson(todo))
+                        showMessage(msg = Gson().toJson(todo))
                         isLoading.value = false
-                        if(todo.id.isEmpty()){
-                            showMessage(msg= "todoId empty: ${todo.id}")
-                            isSuccess.value = false
-                        }else{
-                            showMessage(msg= "todoId notempty: ${todo.id}")
-                            isSuccess.value = true
-                        }
+                        isSuccess.value = true
                     }
                 }
 
             }
         }
+
     }
 
     private fun showMessage(tag: String ="CreatePageViewModel", msg: String) {

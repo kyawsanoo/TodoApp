@@ -60,6 +60,9 @@ class EditPageViewModel @Inject constructor(
         return Gson().toJson(this)
     }
 
+    fun isValidated(): Boolean {
+        return isComplete.isNotEmpty()
+    }
     fun updateButtonClicked(){
         showMessage(msg= "update button clicked ${todoItem!!.id} & isComplete: ${isComplete=="True"}")
         viewModelScope.launch {
@@ -78,18 +81,11 @@ class EditPageViewModel @Inject constructor(
 
                     else -> {
                         showMessage(msg= "Update todo Api  Success")
-                        //val todo: Data = it.data!!
+                        val todo: Data = it.data!!
                         showMessage(msg= Gson().toJson(todo))
                         isLoading.value = false
                         isSuccess.value = true
-                        /*if(todo.id.isEmpty()){
-                            Log.e(TAG, "todoId empty: ${todo.id}")
-                            isSuccess.value = false
-                        }else{
-                            Log.e(TAG, "todoId notempty: ${todo.id} success")
-                            isSuccess.value = true
-                        }*/
-                        isSuccess.value = true
+
                     }
                 }
 

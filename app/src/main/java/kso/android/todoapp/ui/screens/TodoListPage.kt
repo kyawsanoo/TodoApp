@@ -28,6 +28,7 @@ import kso.android.todoapp.R
 import kso.android.todoapp.models.Data
 import kso.android.todoapp.models.Resource
 import kso.android.todoapp.navigation.NavPath
+import kso.android.todoapp.ui.NetworkAlertScreen
 import kso.android.todoapp.ui.TodoListView
 import kso.android.todoapp.viewmodels.TodoListViewModel
 import java.text.SimpleDateFormat
@@ -201,10 +202,8 @@ fun TodoRow(todo: Data, navHostController: NavHostController, todoListViewModel:
                 verticalArrangement = Arrangement.spacedBy(5.dp)
 
             ) {
-                todo.todoName?.let { Text("name: $it", fontSize = 14.sp) }
-                todo.createdAt?.let { Text("createdAt: ${formatDate(it)}", fontSize = 14.sp) }
-                todo.updatedAt?.let { Text("updatedAt: ${formatDate(it)}", fontSize = 14.sp) }
-                todo.isComplete?.let { Text("isCompleted: $it", fontSize = 14.sp) }
+                Text("name: ${todo.todoName}", fontSize = 14.sp)
+                Text("completed: ${todo.completed}", fontSize = 14.sp)
                 Row(verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -243,7 +242,7 @@ fun EditButton(onClick: () -> Unit) {
 
 
 @Composable
-fun DeleteButton(todoId: String, todoListViewModel: TodoListViewModel, isLoading: Boolean, errorMessage: String, isSuccess:Boolean) {
+fun DeleteButton(todoId: Int, todoListViewModel: TodoListViewModel, isLoading: Boolean, errorMessage: String, isSuccess:Boolean) {
     showMessage(msg = "DeleteButton")
 
     MaterialTheme {

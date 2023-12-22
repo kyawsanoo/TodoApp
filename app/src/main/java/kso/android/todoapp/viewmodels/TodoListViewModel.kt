@@ -99,7 +99,7 @@ class TodoListViewModel @Inject constructor(
     }
 
 
-    fun deleteButtonClicked(todoId: String){
+    fun deleteButtonClicked(todoId: Int){
         showMessage(msg= "delete button clicked")
         viewModelScope.launch {
             repository.deleteTodoResource(todoId).collect{

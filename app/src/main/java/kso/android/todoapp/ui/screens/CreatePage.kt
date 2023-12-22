@@ -42,6 +42,7 @@ fun CreatePage(
     val isSuccess by createPageViewModel.isSuccess.observeAsState(false)
     val isLoading by createPageViewModel.isLoading.observeAsState(false)
     val errorMessage by createPageViewModel.errorMessage.observeAsState("")
+    val context = LocalContext.current
 
     when(isLoading){
         true -> {
@@ -81,8 +82,11 @@ fun CreatePage(
                 Spacer(modifier = Modifier.padding(vertical = 20.dp))
                 CreateButton(onClick = {
                     showMessage(msg =   "create button click")
-                    createPageViewModel.createButtonClicked()
-
+                    if(createPageViewModel.isValided()) {
+                        createPageViewModel.createButtonClicked()
+                    }else{
+                        Toast.makeText(context, "Create new todo succeeded.", Toast.LENGTH_LONG).show()
+                    }
 
                 }, createPageViewModel, isLoading, errorMessage, isSuccess, onBackClick = {
                     navHostController.popBackStack()

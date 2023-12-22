@@ -4,27 +4,23 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-
+/*/*
+{"id":1,"todo":"Do something nice for someone I care about","completed":true,"userId":26} */
+*/
 @Entity(tableName = "Data", indices = [Index("id")])
 data class Data (
 
   @PrimaryKey(autoGenerate = false)
-  @SerializedName("_id")
-  var id : String,
+  @SerializedName("id")
+  var id : Int,
 
-  @SerializedName("todoName")
-  var todoName: String? = null,
+  @SerializedName("todo")
+  var todoName: String,
 
-  @SerializedName("createdAt")
-  var createdAt : String? = null,
+  @SerializedName("completed")
+  var completed : Boolean,
 
-  @SerializedName("updatedAt")
-  var updatedAt : String? = null,
-
-  @SerializedName("__v")
-  var _v: Int?     = null,
-
-  @SerializedName("isComplete")
-  var isComplete : Boolean? = null,
+  @SerializedName("userId")
+  var userId : Int,
 
 )

@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kso.android.todoapp.BuildConfig
 import kso.android.todoapp.api.RestDataSource
-import kso.android.todoapp.models.CreateTodoResp
 import kso.android.todoapp.models.Data
 import kso.android.todoapp.models.Resource
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -30,26 +29,30 @@ class CreateNewTaskRepository @Inject constructor(private val apiDataSource: Res
             emit(Resource.Loading)
                 Log.e(tag.simpleName, "create new todo api response")
                 val jsonObject = JSONObject()
-                jsonObject.put("todoName", todoName)
-                jsonObject.put("isComplete", false)
+                jsonObject.put("todo", todoName)
+                jsonObject.put("completed", false)
+                jsonObject.put("userId", 1)
                 val jsonObjectString = jsonObject.toString()
                 val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-                val response: Response<CreateTodoResp> = apiDataSource.createNewTask(requestBody);
-                if(response.isSuccessful){
+                val response: Response<Data> = apiDataSource.createNewTask(requestBody);
                     if (response.isSuccessful) {
-                        val createNewResponseJson = Gson().toJson(
-                            response.body()!!.data
-                        )
-                        showMessage(msg= "Create New Task Response JSON :$createNewResponseJson")
-                        emit(Resource.Success(response.body()!!.data))
+                        if(response.body()!=null) {
+                            val todo: Data = response.body()!!
+                            val createNewResponseJson = Gson().toJson(
+                                response.body()!!
+                            )
+                            showMessage(msg = "Create New Task Response JSON :$createNewResponseJson")
+                            emit(Resource.Success(todo))
+                        }else{
+                            showMessage(msg= "Response body: Null")
+                            emit(Resource.Fail(error = "Response body: Null"))
+                        }
                     } else {
                         showMessage(msg= "RETROFIT_ERROR ${response.code()}")
                         emit(Resource.Fail(error = response.message()))
                     }
         }
     }
-    }
-
 
     private fun showMessage(tag: String ="CreateNewTaskRepository", msg: String) {
         if (BuildConfig.DEBUG) {
@@ -57,4 +60,6 @@ class CreateNewTaskRepository @Inject constructor(private val apiDataSource: Res
         }
     }
 }
+
+
 
